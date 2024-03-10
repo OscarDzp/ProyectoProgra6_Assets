@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProyectoProgra6_Assets.Models;
+using ProyectoProgra6_Assets.Attributes;
 
 namespace ProyectoProgra6_Assets.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiKey]
     public class RolUsuariosController : ControllerBase
     {
         private readonly Progra6Proyecto2024Context _context;
