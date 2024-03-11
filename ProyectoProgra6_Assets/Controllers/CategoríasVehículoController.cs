@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProyectoProgra6_Assets.Attributes;
 using ProyectoProgra6_Assets.Models;
 
 namespace ProyectoProgra6_Assets.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiKey]
     public class CategoríasVehículoController : ControllerBase
     {
         private readonly Progra6Proyecto2024Context _context;
