@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProyectoProgra6_Assets.Attributes;
 using ProyectoProgra6_Assets.Models;
+using ProyectoProgra6_Assets.ModelsDTOs;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace ProyectoProgra6_Assets.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [ApiKey]
+   // [ApiKey]
     public class UsuariosController : ControllerBase
     {
         private readonly Progra6Proyecto2024Context _context;
@@ -43,6 +46,59 @@ namespace ProyectoProgra6_Assets.Controllers
 
             return usuario;
         }
+
+        [HttpGet("GetUserData")]
+        public ActionResult<IEnumerable<UsuarioDTO>> GetUserData(string pCorreo_electronico)
+        {
+            var query = (from us in _context.Usuarios
+                         join ur in _context.RolUsuarios on us.RolId equals ur.RolId
+                         where us.CorreoElectronico == pCorreo_electronico
+                         select new
+                         {
+                             UsuarioId = us.UsuarioId,
+                             Nombre = us.Nombre,
+                             Apellido = us.Apellido,
+                             Cedula = us.Cedula,
+                             Telefono = us.Telefono,
+                             CorreoElectronico = us.CorreoElectronico,
+                             Contrasennia = us.Contrasennia,
+                             RolId = ur.RolId,
+                             RolUsuario = ur.RolUsuario1
+                         }).ToList();
+
+            List<UsuarioDTO> listausuarios = new List<UsuarioDTO>();
+
+            foreach (var item in query)
+            {
+                UsuarioDTO newusuario = new UsuarioDTO
+                {
+                    UsuarioId = item.UsuarioId,
+                    Nombre = item.Nombre,
+                    Apellido = item.Apellido,
+                    Cedula = item.Cedula,
+                    Telefono = item.Telefono,
+                    CorreoElectronico = item.CorreoElectronico,
+                    Contrasennia = item.Contrasennia,
+                    RolId = item.RolId,
+                    RolUsuario = item.RolUsuario
+                };
+                listausuarios.Add(newusuario);
+            }
+
+            if (listausuarios == null || listausuarios.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return listausuarios;
+        }
+
+
+
+
+
+
+
 
         // PUT: api/Usuarios/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
